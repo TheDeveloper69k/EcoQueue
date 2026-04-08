@@ -4,227 +4,542 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EcoQueue – Report Waste</title>
+    <title>EcoQueue</title>
     <style>
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box
         }
 
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #f0f4f8;
+            background: #f0f7f4;
+            min-height: 100vh
+        }
+
+        /* LANDING PAGE */
+        .landing {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             min-height: 100vh;
+            padding: 2rem
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 1rem
+        }
+
+        .landing h1 {
+            font-size: 2rem;
+            color: #1a7a4a;
+            font-weight: 700;
+            margin-bottom: 0.5rem
+        }
+
+        .landing p {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            max-width: 400px
+        }
+
+        .role-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 500px
+        }
+
+        .role-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08)
+        }
+
+        .role-card:hover {
+            border-color: #1a7a4a;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(26, 122, 74, 0.15)
+        }
+
+        .role-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem
+        }
+
+        .role-card h3 {
+            font-size: 1.1rem;
+            color: #1a7a4a;
+            margin-bottom: 0.4rem
+        }
+
+        .role-card p {
+            font-size: 0.82rem;
+            color: #888;
+            line-height: 1.5
+        }
+
+        /* ADMIN LOGIN MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center
+        }
+
+        .modal-overlay.active {
+            display: flex
+        }
+
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2)
+        }
+
+        .modal h2 {
+            color: #1e3a5f;
+            font-size: 1.3rem;
+            margin-bottom: 0.4rem
+        }
+
+        .modal p {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 1.8rem
+        }
+
+        .modal label {
+            display: block;
+            font-size: 0.8rem;
+            color: #555;
+            margin-bottom: 5px;
+            font-weight: 500
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            outline: none;
+            transition: border 0.2s;
+            font-family: inherit
+        }
+
+        .modal input:focus {
+            border-color: #1e3a5f
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 13px;
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s
+        }
+
+        .modal-btn:hover {
+            background: #162d4a
+        }
+
+        .cancel-btn {
+            width: 100%;
+            padding: 10px;
+            background: none;
+            color: #888;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 0.5rem
+        }
+
+        .modal-error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none
+        }
+
+        .modal-error.show {
+            display: block
+        }
+
+        /* CITIZEN PAGE */
+        .page {
+            display: none
+        }
+
+        .page.active {
+            display: block
         }
 
         header {
-            background: #1a7a4a;
-            color: white;
+            background: white;
             padding: 1rem 2rem;
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: space-between;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08)
         }
 
-        header h1 {
-            font-size: 1.4rem;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .header-left .logo-small {
+            font-size: 1.4rem
+        }
+
+        .header-left h1 {
+            font-size: 1.1rem;
             font-weight: 600;
+            color: #1a7a4a
         }
 
-        header span {
-            font-size: 1.6rem;
+        .header-left span {
+            font-size: 0.8rem;
+            color: #888
+        }
+
+        .back-btn {
+            background: none;
+            border: 1.5px solid #ddd;
+            padding: 7px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #555;
+            transition: all 0.2s
+        }
+
+        .back-btn:hover {
+            border-color: #1a7a4a;
+            color: #1a7a4a
         }
 
         .container {
-            max-width: 600px;
+            max-width: 640px;
             margin: 2rem auto;
-            padding: 0 1rem;
+            padding: 0 1rem
         }
 
         .card {
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 2rem;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+            margin-bottom: 1.5rem
         }
 
-        .card h2 {
-            font-size: 1.1rem;
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
             color: #1a7a4a;
             margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px
         }
 
         label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: #555;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
+            font-weight: 500
         }
 
-        input,
+        input[type=text],
         textarea {
             width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 0.95rem;
+            padding: 11px 14px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 0.93rem;
             margin-bottom: 1rem;
             font-family: inherit;
             outline: none;
-            transition: border 0.2s;
+            transition: border 0.2s
         }
 
-        input:focus,
+        input[type=text]:focus,
         textarea:focus {
-            border-color: #1a7a4a;
+            border-color: #1a7a4a
         }
 
         textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 100px
         }
 
-        button {
+        .submit-btn {
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             background: #1a7a4a;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
             cursor: pointer;
             font-weight: 500;
-            transition: background 0.2s;
+            transition: background 0.2s
         }
 
-        button:hover {
-            background: #155f3a;
+        .submit-btn:hover {
+            background: #155f3a
         }
 
         .toast {
             display: none;
-            margin-top: 1rem;
             padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            border-radius: 10px;
+            font-size: 0.88rem;
             text-align: center;
+            margin-top: 1rem
         }
 
         .toast.success {
             background: #d1fae5;
             color: #065f46;
-            display: block;
+            display: block
         }
 
         .toast.error {
             background: #fee2e2;
             color: #991b1b;
-            display: block;
+            display: block
         }
 
-        .queue-section {
-            margin-top: 2rem;
+        .queue-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem
         }
 
-        .queue-section h2 {
-            font-size: 1rem;
-            color: #333;
-            margin-bottom: 1rem;
+        .queue-header h2 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #333
+        }
+
+        .badge-count {
+            background: #1a7a4a;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem
         }
 
         .report-card {
             background: white;
-            border-radius: 10px;
-            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            padding: 1.1rem 1.3rem;
             margin-bottom: 0.75rem;
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
             border-left: 4px solid #1a7a4a;
+            transition: transform 0.15s
+        }
+
+        .report-card:hover {
+            transform: translateX(3px)
         }
 
         .report-card .loc {
             font-weight: 600;
             color: #1a7a4a;
-            font-size: 0.95rem;
+            font-size: 0.93rem;
+            display: flex;
+            align-items: center;
+            gap: 6px
         }
 
         .report-card .desc {
-            color: #555;
-            font-size: 0.88rem;
-            margin-top: 4px;
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            line-height: 1.5
         }
 
         .report-card .time {
-            color: #aaa;
-            font-size: 0.78rem;
-            margin-top: 6px;
+            color: #bbb;
+            font-size: 0.76rem;
+            margin-top: 6px
         }
 
-        .badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
+        .badge-pending {
             background: #fef3c7;
             color: #92400e;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 500
         }
 
-        .admin-link {
+        .empty-state {
             text-align: center;
-            margin-top: 1.5rem;
-            font-size: 0.85rem;
-            color: #888;
-        }
-
-        .admin-link a {
-            color: #1a7a4a;
-            text-decoration: none;
-            font-weight: 500;
+            padding: 2rem;
+            color: #bbb;
+            font-size: 0.9rem
         }
     </style>
 </head>
 
 <body>
 
-    <header>
-        <span>♻️</span>
-        <h1>EcoQueue – Waste Reporting System</h1>
-    </header>
-
-    <div class="container">
-        <div class="card">
-            <h2>📍 Submit a Waste Report</h2>
-            <label>Location</label>
-            <input type="text" id="location" placeholder="e.g. Sector 14, Near Bus Stand" />
-            <label>Description</label>
-            <textarea id="description" placeholder="Describe the waste issue..."></textarea>
-            <button onclick="submitReport()">Submit Report</button>
-            <div class="toast" id="toast"></div>
+    <!-- LANDING PAGE -->
+    <div class="landing" id="landing">
+        <div class="logo">♻️</div>
+        <h1>EcoQueue</h1>
+        <p>Smart waste management powered by the Producer–Consumer model. Select your role to continue.</p>
+        <div class="role-cards">
+            <div class="role-card" onclick="gotoCitizen()">
+                <div class="icon">👤</div>
+                <h3>Citizen</h3>
+                <p>Report waste issues in your locality</p>
+            </div>
+            <div class="role-card" onclick="showAdminLogin()">
+                <div class="icon">🛠️</div>
+                <h3>Admin</h3>
+                <p>Process and manage waste reports</p>
+            </div>
         </div>
+    </div>
 
-        <div class="queue-section">
-            <h2>🕐 Pending Reports in Queue (<span id="count">0</span>)</h2>
-            <div id="queue-list"></div>
+    <!-- ADMIN LOGIN MODAL -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h2>🔐 Admin Login</h2>
+            <p>Enter your credentials to access the dashboard</p>
+            <div class="modal-error" id="modal-error">Invalid username or password</div>
+            <label>Username</label>
+            <input type="text" id="username" placeholder="Enter username" />
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter password"
+                onkeydown="if(event.key==='Enter')doLogin()" />
+            <button class="modal-btn" onclick="doLogin()">Login →</button>
+            <button class="cancel-btn" onclick="closeModal()">Cancel</button>
         </div>
+    </div>
 
-        <div class="admin-link">
-            <a href="admin.html">Go to Admin Dashboard →</a>
+    <!-- CITIZEN PAGE -->
+    <div class="page" id="citizen-page">
+        <header>
+            <div class="header-left">
+                <span class="logo-small">♻️</span>
+                <div>
+                    <h1>EcoQueue</h1>
+                    <span>Citizen Portal</span>
+                </div>
+            </div>
+            <button class="back-btn" onclick="goBack()">← Back</button>
+        </header>
+
+        <div class="container">
+            <div class="card">
+                <div class="card-title">📍 Submit a Waste Report</div>
+                <label>Location</label>
+                <input type="text" id="location" placeholder="e.g. Sector 14, Near Bus Stand" />
+                <label>Description</label>
+                <textarea id="description" placeholder="Describe the waste issue in detail..."></textarea>
+                <button class="submit-btn" onclick="submitReport()">Submit Report</button>
+                <div class="toast" id="toast"></div>
+            </div>
+
+            <div>
+                <div class="queue-header">
+                    <h2>🕐 Pending Reports in Queue</h2>
+                    <span class="badge-count" id="count">0</span>
+                </div>
+                <div id="queue-list"></div>
+            </div>
         </div>
     </div>
 
     <script>
+        function gotoCitizen() {
+            document.getElementById('landing').style.display = 'none'
+            document.getElementById('citizen-page').classList.add('active')
+            loadQueue()
+        }
+
+        function showAdminLogin() {
+            document.getElementById('modal').classList.add('active')
+            setTimeout(() => document.getElementById('username').focus(), 100)
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active')
+            document.getElementById('modal-error').classList.remove('show')
+            document.getElementById('username').value = ''
+            document.getElementById('password').value = ''
+        }
+
+        async function doLogin() {
+            const username = document.getElementById('username').value.trim()
+            const password = document.getElementById('password').value.trim()
+            const errBox = document.getElementById('modal-error')
+
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            })
+            const data = await res.json()
+
+            if (data.success) {
+                localStorage.setItem('ecoqueue-token', data.token)
+                window.location.href = 'admin.html'
+            } else {
+                errBox.classList.add('show')
+                document.getElementById('password').value = ''
+            }
+        }
+
+        function goBack() {
+            document.getElementById('citizen-page').classList.remove('active')
+            document.getElementById('landing').style.display = 'flex'
+        }
+
         async function submitReport() {
             const location = document.getElementById('location').value.trim()
             const description = document.getElementById('description').value.trim()
             const toast = document.getElementById('toast')
-
             if (!location || !description) {
                 toast.className = 'toast error'
                 toast.textContent = 'Please fill in both fields.'
                 return
             }
-
             try {
                 const res = await fetch('/api/producer/report', {
                     method: 'POST',
@@ -232,7 +547,6 @@
                     body: JSON.stringify({ location, description })
                 })
                 const data = await res.json()
-
                 if (res.ok) {
                     toast.className = 'toast success'
                     toast.textContent = '✅ Report submitted successfully!'
@@ -241,9 +555,9 @@
                     loadQueue()
                 } else {
                     toast.className = 'toast error'
-                    toast.textContent = '❌ Error: ' + data.error
+                    toast.textContent = '❌ ' + data.error
                 }
-            } catch (err) {
+            } catch {
                 toast.className = 'toast error'
                 toast.textContent = '❌ Server error. Is the server running?'
             }
@@ -256,21 +570,22 @@
             const list = document.getElementById('queue-list')
             list.innerHTML = ''
             if (data.queue.length === 0) {
-                list.innerHTML = '<p style="color:#aaa;font-size:0.9rem;">No pending reports.</p>'
+                list.innerHTML = '<div class="empty-state">No pending reports in queue</div>'
                 return
             }
             data.queue.forEach(r => {
                 list.innerHTML += `
         <div class="report-card">
-          <div class="loc">📍 ${r.location} <span class="badge">pending</span></div>
+          <div class="loc">📍 ${r.location} <span class="badge-pending">pending</span></div>
           <div class="desc">${r.description}</div>
           <div class="time">🕐 ${new Date(r.created_at).toLocaleString()}</div>
         </div>`
             })
         }
 
-        loadQueue()
-        setInterval(loadQueue, 5000)
+        setInterval(() => {
+            if (document.getElementById('citizen-page').classList.contains('active')) loadQueue()
+        }, 5000)
     </script>
 </body>
 

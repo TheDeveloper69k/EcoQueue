@@ -4,18 +4,18 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EcoQueue – Admin Dashboard</title>
+    <title>EcoQueue – Admin</title>
     <style>
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box
         }
 
         body {
             font-family: 'Segoe UI', sans-serif;
             background: #f0f4f8;
-            min-height: 100vh;
+            min-height: 100vh
         }
 
         header {
@@ -24,173 +24,221 @@
             padding: 1rem 2rem;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: space-between
         }
 
-        header h1 {
-            font-size: 1.4rem;
-            font-weight: 600;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .header-left h1 {
+            font-size: 1.1rem;
+            font-weight: 600
+        }
+
+        .header-left span {
+            font-size: 0.8rem;
+            opacity: 0.6
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 7px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.2s
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.25)
         }
 
         .container {
             max-width: 800px;
             margin: 2rem auto;
-            padding: 0 1rem;
+            padding: 0 1rem
         }
 
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 2rem
         }
 
         .stat-card {
             background: white;
-            border-radius: 12px;
-            padding: 1.2rem;
+            border-radius: 14px;
+            padding: 1.3rem;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07)
         }
 
         .stat-card .number {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #1e3a5f;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1e3a5f
         }
 
         .stat-card .label {
-            font-size: 0.8rem;
-            color: #888;
+            font-size: 0.78rem;
+            color: #999;
             margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px
         }
 
         .process-btn {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             background: #1e3a5f;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 1rem;
             cursor: pointer;
             font-weight: 500;
-            margin-bottom: 2rem;
-            transition: background 0.2s;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px
         }
 
         .process-btn:hover {
             background: #162d4a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(30, 58, 95, 0.3)
         }
 
         .process-btn:disabled {
             background: #aaa;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none
         }
 
         .toast {
             display: none;
-            margin-bottom: 1rem;
             padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            border-radius: 10px;
+            font-size: 0.88rem;
             text-align: center;
+            margin-bottom: 1.5rem
         }
 
         .toast.success {
             background: #d1fae5;
             color: #065f46;
-            display: block;
+            display: block
         }
 
         .toast.error {
             background: #fee2e2;
             color: #991b1b;
-            display: block;
+            display: block
         }
 
         .toast.info {
             background: #dbeafe;
             color: #1e40af;
-            display: block;
+            display: block
         }
 
-        h2 {
-            font-size: 1rem;
-            color: #333;
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #555;
             margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px
         }
 
         .report-card {
             background: white;
-            border-radius: 10px;
-            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            padding: 1.1rem 1.3rem;
             margin-bottom: 0.75rem;
-            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+            transition: transform 0.15s
+        }
+
+        .report-card:hover {
+            transform: translateX(3px)
         }
 
         .report-card.pending {
-            border-left: 4px solid #f59e0b;
+            border-left: 4px solid #f59e0b
         }
 
         .report-card.processed {
-            border-left: 4px solid #10b981;
+            border-left: 4px solid #10b981
         }
 
         .report-card .loc {
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.93rem;
+            display: flex;
+            align-items: center;
+            gap: 6px
         }
 
         .report-card.pending .loc {
-            color: #92400e;
+            color: #92400e
         }
 
         .report-card.processed .loc {
-            color: #065f46;
+            color: #065f46
         }
 
         .report-card .desc {
-            color: #555;
-            font-size: 0.88rem;
-            margin-top: 4px;
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            line-height: 1.5
         }
 
         .report-card .time {
-            color: #aaa;
-            font-size: 0.78rem;
-            margin-top: 6px;
+            color: #bbb;
+            font-size: 0.76rem;
+            margin-top: 6px
         }
 
         .badge-pending {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
             background: #fef3c7;
             color: #92400e;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 500
         }
 
         .badge-processed {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
             background: #d1fae5;
             color: #065f46;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 500
         }
 
-        .back-link {
+        .empty-state {
             text-align: center;
-            margin-top: 1.5rem;
-            font-size: 0.85rem;
-            color: #888;
+            padding: 2rem;
+            color: #bbb;
+            font-size: 0.9rem;
+            background: white;
+            border-radius: 12px
         }
 
-        .back-link a {
-            color: #1e3a5f;
-            text-decoration: none;
-            font-weight: 500;
+        .section-gap {
+            margin-top: 2rem
         }
     </style>
 </head>
@@ -198,15 +246,20 @@
 <body>
 
     <header>
-        <h1>🛠️ EcoQueue – Admin Dashboard</h1>
-        <span style="font-size:0.85rem; opacity:0.7;">Consumer Module</span>
+        <div class="header-left">
+            <div>
+                <h1>🛠️ EcoQueue Admin Dashboard</h1>
+                <span>Consumer Module — Process waste reports from the queue</span>
+            </div>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout →</button>
     </header>
 
     <div class="container">
         <div class="stats">
             <div class="stat-card">
                 <div class="number" id="pending-count">0</div>
-                <div class="label">Pending in Queue</div>
+                <div class="label">Pending</div>
             </div>
             <div class="stat-card">
                 <div class="number" id="processed-count">0</div>
@@ -214,59 +267,68 @@
             </div>
             <div class="stat-card">
                 <div class="number" id="total-count">0</div>
-                <div class="label">Total Reports</div>
+                <div class="label">Total</div>
             </div>
         </div>
 
-        <div class="toast" id="toast"></div>
-        <button class="process-btn" onclick="processNext()">
+        <button class="process-btn" id="process-btn" onclick="processNext()">
             ⚙️ Process Next Report in Queue
         </button>
 
-        <h2>🕐 Pending Queue</h2>
+        <div class="toast" id="toast"></div>
+
+        <div class="section-title">🕐 Pending Queue</div>
         <div id="pending-list"></div>
 
-        <h2 style="margin-top:1.5rem;">✅ Processed Reports</h2>
-        <div id="processed-list"></div>
-
-        <div class="back-link">
-            <a href="index.html">← Back to Citizen Portal</a>
+        <div class="section-gap">
+            <div class="section-title">✅ Processed Reports</div>
+            <div id="processed-list"></div>
         </div>
     </div>
 
     <script>
+        // Guard — redirect to home if not logged in
+        if (localStorage.getItem('ecoqueue-token') !== 'ecoqueue-admin-token') {
+            window.location.href = 'index.html'
+        }
+
+        function logout() {
+            localStorage.removeItem('ecoqueue-token')
+            window.location.href = 'index.html'
+        }
+
         async function processNext() {
             const toast = document.getElementById('toast')
-            const btn = document.querySelector('.process-btn')
+            const btn = document.getElementById('process-btn')
             btn.disabled = true
             btn.textContent = '⏳ Processing...'
 
             try {
                 const res = await fetch('/api/consumer/process', { method: 'POST' })
                 const data = await res.json()
-
                 if (res.ok) {
                     toast.className = 'toast success'
                     toast.textContent = `✅ Processed report from: ${data.report.location}`
                 } else {
                     toast.className = 'toast info'
-                    toast.textContent = '📭 ' + data.message
+                    toast.textContent = '📭 Queue is empty — no reports to process'
                 }
-            } catch (err) {
+            } catch {
                 toast.className = 'toast error'
                 toast.textContent = '❌ Server error.'
             }
 
             btn.disabled = false
-            btn.textContent = '⚙️ Process Next Report in Queue'
+            btn.innerHTML = '⚙️ Process Next Report in Queue'
             loadData()
         }
 
         async function loadData() {
-            const pendingRes = await fetch('/api/producer/queue')
+            const [pendingRes, processedRes] = await Promise.all([
+                fetch('/api/producer/queue'),
+                fetch('/api/consumer/processed')
+            ])
             const pendingData = await pendingRes.json()
-
-            const processedRes = await fetch('/api/consumer/processed')
             const processedData = await processedRes.json()
 
             document.getElementById('pending-count').textContent = pendingData.count
@@ -276,7 +338,7 @@
             const pendingList = document.getElementById('pending-list')
             pendingList.innerHTML = ''
             if (pendingData.queue.length === 0) {
-                pendingList.innerHTML = '<p style="color:#aaa;font-size:0.9rem;">Queue is empty.</p>'
+                pendingList.innerHTML = '<div class="empty-state">Queue is empty</div>'
             } else {
                 pendingData.queue.forEach(r => {
                     pendingList.innerHTML += `
@@ -291,7 +353,7 @@
             const processedList = document.getElementById('processed-list')
             processedList.innerHTML = ''
             if (processedData.processed.length === 0) {
-                processedList.innerHTML = '<p style="color:#aaa;font-size:0.9rem;">No processed reports yet.</p>'
+                processedList.innerHTML = '<div class="empty-state">No processed reports yet</div>'
             } else {
                 processedData.processed.forEach(r => {
                     processedList.innerHTML += `
